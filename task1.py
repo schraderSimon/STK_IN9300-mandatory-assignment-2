@@ -312,7 +312,7 @@ train_Y=np.array(train.loc[:, train.columns == 'LC50'])
 test_X=np.array(test.loc[:, test.columns != 'LC50'])
 test_Y=np.array(test.loc[:, test.columns == 'LC50'])
 ## model
-n_splines=int(train_X.shape[0]/train_X.shape[1])+15 #+15 to others because we end up using less splines for C050, H040 and nN 
+n_splines=int(train_X.shape[0]/train_X.shape[1])+15 #+15 to others because we end up using less splines for C050, H040 and nN
 formula = s(0, n_splines)
 from collections import Counter
 for i in range(1, train_X.shape[1]):
@@ -390,11 +390,7 @@ print("Tree test error (CV): %f"%MSE(y_pred_test,test_Y))
 plot_tree(tree,feature_names=["intercept","TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040","LC50"])
 plt.savefig("tree.pdf")
 plt.show()
-full_tree = DecisionTreeRegressor(random_state=init_random)
-full_tree.fit(train_X, train_Y)
-plot_tree(full_tree,feature_names=["intercept","TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040","LC50"])
-plt.savefig("full_tree.pdf")
-plt.show()
+
 
 """
 train_X=train.loc[:, train.columns != 'LC50']

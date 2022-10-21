@@ -1,0 +1,230 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   LC50   R-squared:                       0.482
+Model:                            OLS   Adj. R-squared:                  0.470
+Method:                 Least Squares   F-statistic:                     41.24
+Date:                Fri, 21 Oct 2022   Prob (F-statistic):           2.39e-46
+Time:                        13:57:28   Log-Likelihood:                -577.75
+No. Observations:                 364   AIC:                             1173.
+Df Residuals:                     355   BIC:                             1209.
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          2.7249      0.308      8.856      0.000       2.120       3.330
+TPSA           0.0286      0.003      8.779      0.000       0.022       0.035
+SAacc         -0.0166      0.002     -6.686      0.000      -0.022      -0.012
+H050           0.1360      0.073      1.866      0.063      -0.007       0.279
+MLOGP          0.5075      0.077      6.551      0.000       0.355       0.660
+RDCHI          0.4094      0.164      2.493      0.013       0.086       0.732
+GATS1p        -0.5392      0.194     -2.773      0.006      -0.921      -0.157
+nN            -0.2297      0.055     -4.151      0.000      -0.338      -0.121
+C040           0.1699      0.089      1.918      0.056      -0.004       0.344
+==============================================================================
+Omnibus:                       19.781   Durbin-Watson:                   1.911
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               25.243
+Skew:                           0.458   Prob(JB):                     3.30e-06
+Kurtosis:                       3.908   Cond. No.                         621.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+Train error: 1.400125
+Test error: 1.530309
+End of Non-dichotomized data
+-------------------------------------
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   LC50   R-squared:                       0.457
+Model:                            OLS   Adj. R-squared:                  0.445
+Method:                 Least Squares   F-statistic:                     37.35
+Date:                Fri, 21 Oct 2022   Prob (F-statistic):           7.96e-43
+Time:                        13:57:28   Log-Likelihood:                -586.22
+No. Observations:                 364   AIC:                             1190.
+Df Residuals:                     355   BIC:                             1226.
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          2.9490      0.320      9.222      0.000       2.320       3.578
+TPSA           0.0234      0.003      7.167      0.000       0.017       0.030
+SAacc         -0.0124      0.002     -5.639      0.000      -0.017      -0.008
+H050          -0.1190      0.156     -0.765      0.445      -0.425       0.187
+MLOGP          0.4796      0.075      6.373      0.000       0.332       0.628
+RDCHI          0.3638      0.165      2.205      0.028       0.039       0.688
+GATS1p        -0.6295      0.190     -3.311      0.001      -1.003      -0.256
+nN             0.0011      0.151      0.007      0.994      -0.296       0.298
+C040           0.2102      0.166      1.267      0.206      -0.116       0.536
+==============================================================================
+Omnibus:                       13.689   Durbin-Watson:                   1.924
+Prob(Omnibus):                  0.001   Jarque-Bera (JB):               14.651
+Skew:                           0.420   Prob(JB):                     0.000658
+Kurtosis:                       3.512   Cond. No.                         628.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+Train error: 1.466874
+Test error: 1.553910
+End of Dichotomized data
+-------------------------------------
+Averaged over 200 runs, the mean train and test errors are:
+Non-dichotomized data:
+Test error: 1.501635
+Train error: 1.407271
+dichotomized data:
+Test error: 1.553526
+Train error: 1.459060
+Forward AIC
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   LC50   R-squared:                       0.474
+Model:                            OLS   Adj. R-squared:                  0.465
+Method:                 Least Squares   F-statistic:                     53.59
+Date:                Fri, 21 Oct 2022   Prob (F-statistic):           6.01e-47
+Time:                        13:57:28   Log-Likelihood:                -580.47
+No. Observations:                 364   AIC:                             1175.
+Df Residuals:                     357   BIC:                             1202.
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          2.8576      0.284     10.049      0.000       2.298       3.417
+MLOGP          0.4451      0.072      6.171      0.000       0.303       0.587
+TPSA           0.0269      0.003      8.499      0.000       0.021       0.033
+SAacc         -0.0135      0.002     -6.791      0.000      -0.017      -0.010
+nN            -0.2021      0.054     -3.727      0.000      -0.309      -0.095
+GATS1p        -0.6639      0.183     -3.636      0.000      -1.023      -0.305
+RDCHI          0.4872      0.161      3.032      0.003       0.171       0.803
+==============================================================================
+Omnibus:                       17.222   Durbin-Watson:                   1.904
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               20.986
+Skew:                           0.429   Prob(JB):                     2.77e-05
+Kurtosis:                       3.805   Cond. No.                         567.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+BW AIC
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   LC50   R-squared:                       0.482
+Model:                            OLS   Adj. R-squared:                  0.470
+Method:                 Least Squares   F-statistic:                     41.24
+Date:                Fri, 21 Oct 2022   Prob (F-statistic):           2.39e-46
+Time:                        13:57:28   Log-Likelihood:                -577.75
+No. Observations:                 364   AIC:                             1173.
+Df Residuals:                     355   BIC:                             1209.
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          2.7249      0.308      8.856      0.000       2.120       3.330
+TPSA           0.0286      0.003      8.779      0.000       0.022       0.035
+SAacc         -0.0166      0.002     -6.686      0.000      -0.022      -0.012
+H050           0.1360      0.073      1.866      0.063      -0.007       0.279
+MLOGP          0.5075      0.077      6.551      0.000       0.355       0.660
+RDCHI          0.4094      0.164      2.493      0.013       0.086       0.732
+GATS1p        -0.5392      0.194     -2.773      0.006      -0.921      -0.157
+nN            -0.2297      0.055     -4.151      0.000      -0.338      -0.121
+C040           0.1699      0.089      1.918      0.056      -0.004       0.344
+==============================================================================
+Omnibus:                       19.781   Durbin-Watson:                   1.911
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               25.243
+Skew:                           0.458   Prob(JB):                     3.30e-06
+Kurtosis:                       3.908   Cond. No.                         621.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+Forward BIC
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   LC50   R-squared:                       0.474
+Model:                            OLS   Adj. R-squared:                  0.465
+Method:                 Least Squares   F-statistic:                     53.59
+Date:                Fri, 21 Oct 2022   Prob (F-statistic):           6.01e-47
+Time:                        13:57:28   Log-Likelihood:                -580.47
+No. Observations:                 364   AIC:                             1175.
+Df Residuals:                     357   BIC:                             1202.
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          2.8576      0.284     10.049      0.000       2.298       3.417
+MLOGP          0.4451      0.072      6.171      0.000       0.303       0.587
+TPSA           0.0269      0.003      8.499      0.000       0.021       0.033
+SAacc         -0.0135      0.002     -6.791      0.000      -0.017      -0.010
+nN            -0.2021      0.054     -3.727      0.000      -0.309      -0.095
+GATS1p        -0.6639      0.183     -3.636      0.000      -1.023      -0.305
+RDCHI          0.4872      0.161      3.032      0.003       0.171       0.803
+==============================================================================
+Omnibus:                       17.222   Durbin-Watson:                   1.904
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               20.986
+Skew:                           0.429   Prob(JB):                     2.77e-05
+Kurtosis:                       3.805   Cond. No.                         567.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+BW BIC
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   LC50   R-squared:                       0.474
+Model:                            OLS   Adj. R-squared:                  0.465
+Method:                 Least Squares   F-statistic:                     53.59
+Date:                Fri, 21 Oct 2022   Prob (F-statistic):           6.01e-47
+Time:                        13:57:28   Log-Likelihood:                -580.47
+No. Observations:                 364   AIC:                             1175.
+Df Residuals:                     357   BIC:                             1202.
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+GATS1p        -0.6639      0.183     -3.636      0.000      -1.023      -0.305
+SAacc         -0.0135      0.002     -6.791      0.000      -0.017      -0.010
+nN            -0.2021      0.054     -3.727      0.000      -0.309      -0.095
+const          2.8576      0.284     10.049      0.000       2.298       3.417
+RDCHI          0.4872      0.161      3.032      0.003       0.171       0.803
+TPSA           0.0269      0.003      8.499      0.000       0.021       0.033
+MLOGP          0.4451      0.072      6.171      0.000       0.303       0.587
+==============================================================================
+Omnibus:                       17.222   Durbin-Watson:                   1.904
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               20.986
+Skew:                           0.429   Prob(JB):                     2.77e-05
+Kurtosis:                       3.805   Cond. No.                         567.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+Train error BW BIC: 1.421234
+Test error BW BIC: 1.446344
+Optimal Lambda (CV): 1.349546
+Ridge train error (CV): 1.400660
+Ridge test error (CV): 1.522999
+Optimal Lambda (BS): 3.554043
+Ridge train error (BS): 1.403360
+Ridge test error (BS): 1.514734
+Lam:10.000000
+Train:
+0.8913957056819077
+Test:
+1.904984854317401
+Lam:100000.000000
+Train:
+1.3723580344370558
+Test:
+1.5007194792663436
+Optimal lambda
+Train:
+1.0699096340795309
+Test:
+1.4789332832999618
+Tree train error (CV): 1.290268
+Tree test error (CV): 1.817941
