@@ -1,0 +1,6 @@
+library(mlbench)
+.libPaths()data(PimaIndiansDiabetes)
+data(PimaIndiansDiabetes2)
+write.csv(PimaIndiansDiabetes, file = 'PimaIndiansDiabetes.csv')
+write.csv(PimaIndiansDiabetes2, file = 'PimaIndiansDiabetes2.csv')
+library(glmnet)
