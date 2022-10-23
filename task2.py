@@ -74,7 +74,7 @@ neigh.fit(train_X, np.array(train_Y).ravel())
 y_predict=neigh.predict(test_X)
 
 """LOO Cross validation"""
-"""
+
 num_cv=len(train_X[:,0]) #CV folds
 CV_errs=np.zeros((len(num_neighbours),num_cv))
 kf = KFold(n_splits=num_cv)
@@ -106,9 +106,28 @@ plt.legend()
 plt.tight_layout()
 plt.savefig("Test_errors_kNN.pdf")
 plt.show()
-"""
 
+neigh = KNeighborsClassifier(n_neighbors=best_k_5Fold)
+neigh.fit(train_X, np.array(train_Y).ravel())
+y_predict_train=neigh.predict(train_X)
+y_predict_test=neigh.predict(test_X)
 
+five_fold_train_error=1-accuracy_score(y_predict_train,train_Y)
+five_fold_test_error=1-accuracy_score(y_predict_test,test_Y)
+
+neigh = KNeighborsClassifier(n_neighbors=best_k_LOO)
+neigh.fit(train_X, np.array(train_Y).ravel())
+y_predict_train=neigh.predict(train_X)
+y_predict_test=neigh.predict(test_X)
+
+LOO_train_error=1-accuracy_score(y_predict_train,train_Y)
+LOO_test_error=1-accuracy_score(y_predict_test,test_Y)
+
+print("5-fold train error: %f"%five_fold_train_error)
+print("5-fold test error: %f"%five_fold_test_error)
+print("LOO train error: %f"%LOO_train_error)
+print("LOO test error: %f"%LOO_test_error)
+"""Tree-based methods"""
 from sklearn import tree
 for k,i in enumerate([0.01]):
     baum = tree.DecisionTreeClassifier(ccp_alpha=i)
@@ -170,51 +189,41 @@ test_predict=boosting.predict(test_X)
 print("Train error: %f"%(1-accuracy_score(train_predict,train_Y)))
 print("Test error: %f"%(1-accuracy_score(test_predict,test_Y)))
 
+
+"""GAM"""
 import pygam
 from pygam import LogisticGAM, s, f
 from pygam.datasets import wage
-"""
-train_X=train.loc[:, train.columns != 'diabetes']
-train_Y=train.loc[:, train.columns == 'diabetes']
-test_X=test.loc[:, test.columns != 'diabetes']
-test_Y=test.loc[:, test.columns == 'diabetes']
-from sklearn.preprocessing import StandardScaler
-scaler=StandardScaler()
-scaler.fit(train_X) #"teach" scaler the correct scaling
-train_X=scaler.transform(train_X)
-test_X=scaler.transform(test_X)
-train_X=np.array(train_X)
-test_X=np.array(test_X)
-"""
+
 np.random.seed(init_random)
-lams=np.exp(10*np.random.rand(500, 8)-2)
-
-
-
-gam = LogisticGAM().gridsearch(train_X,train_Y,lam=lams,objective="AIC")
+lams_linear=np.broadcast_to(np.logspace(0,4,10),(8,10)).T #Lamdas (same for all variables) from 1e-1 to 1e4
+lams_random=np.exp(7*np.random.rand(300, 8)+2)
+lams=np.concatenate((lams_random,lams_linear),axis=0)
+criterion="AIC"
+gam = LogisticGAM().gridsearch(train_X,train_Y,lam=lams,objective=criterion)
 summary=gam.summary()
-print(gam.statistics_["AIC"])
 train_Y_predict=gam.predict(train_X)
 test_Y_predict=gam.predict(test_X)
 print("FULL GAM")
 print("Train:error: %f"%(1-accuracy_score(train_Y_predict,train_Y)))
 print("Test error: %f"%(1-accuracy_score(test_Y_predict,test_Y)))
-def backward_selection_pyGAM(X,y,criterion="AIC"):
+def backward_selection_pyGAM(X,y,lambda_values,criterion="AIC"):
     """
     Perform backward elimination to obtain the best model.
 
     Input:
         X: An array containing the predictors
         y: An array dataframe containing the response
+        lambda_values: The penalty parameters to iterate over
         criterion: The selection criterion. Should be "AIC" or one of the ones supported in pyGAM.
     """
+    lams=lambda_values
     full_model=X
     all_variables=list(range(X.shape[1])) #all variables. lol
     current_X=full_model
-    lams=np.exp(10*np.random.rand(500, 8)-2)
-    current_model = LogisticGAM().gridsearch(full_model,y,lam=lams,objective="AIC")
-    if criterion=="AIC":
-        best_crit=current_model.statistics_["AIC"]
+    #lams=np.exp(7*np.random.rand(100, 8)+2) #Convergence issues when lambdas are too small
+    current_model = LogisticGAM().gridsearch(full_model,y,lam=lams,objective=criterion)
+    best_crit=current_model.statistics_[criterion]
     curr_crit=best_crit*10
     removed=[] #Columns so far removed
     curent_columns=list(range(X.shape[1]))
@@ -227,12 +236,10 @@ def backward_selection_pyGAM(X,y,criterion="AIC"):
             del new_columns[i] # Delete i'th element from list (e.g. iterate through all)
             new_X=full_model[:, new_columns]
             print(new_X.shape)
-            new_model = LogisticGAM().gridsearch(new_X,y,lam=lams[:,new_columns],objective="AIC")
-            if criterion=="AIC":
-                new_crit=new_model.statistics_["AIC"]
-                print(new_columns,new_crit)
+            new_model = LogisticGAM().gridsearch(new_X,y,lam=lams[:,new_columns],objective=criterion)
+            new_crit=new_model.statistics_[criterion]
             new_crits.append(new_crit)
-        best_crit=min(new_crits) #Best model with this number of variables is the one with the lowest AIC/BIC
+        best_crit=min(new_crits) #Best model with this number of variables is the one with the lowest criterion
         if best_crit>=curr_crit:
             return current_model, curent_columns #Current model is the best
         best_crit_index_temp=np.argmin(new_crits)
@@ -240,18 +247,15 @@ def backward_selection_pyGAM(X,y,criterion="AIC"):
         to_remove=best_crit_index
         curent_columns.remove(to_remove)
         current_X=full_model[:, curent_columns]
-        current_model = LogisticGAM().gridsearch(current_X,y,lam=lams[:,curent_columns],objective="AIC")
+        current_model = LogisticGAM().gridsearch(current_X,y,lam=lams[:,curent_columns],objective=criterion)
         if current_X.shape[1]==0: #If the best model is the constant model
             return current_model
-best_model,current_columns=backward_selection_pyGAM(train_X,train_Y)
+best_model,current_columns=backward_selection_pyGAM(train_X,train_Y,lams,criterion)
 summary=best_model.summary()
 gam=best_model
-print(current_columns)
-print(best_model.statistics_["AIC"])
 train_Y_predict=best_model.predict(train_X[:,current_columns])
 test_Y_predict=best_model.predict(test_X[:,current_columns])
 print("Best GAM")
-
 print("Train:")
 print(1-accuracy_score(train_Y_predict,train_Y))
 print("Test:")

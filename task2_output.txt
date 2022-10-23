@@ -1,0 +1,297 @@
+     pregnant  glucose  pressure  triceps  ...  mass  pedigree  age  diabetes
+165         6      104        74       18  ...  29.9     0.722   41         1
+702         1      168        88       29  ...  35.0     0.905   52         1
+602         1      124        74       36  ...  27.8     0.100   30         0
+115         4      146        92        0  ...  31.2     0.539   61         1
+472         0      119        66       27  ...  38.8     0.259   22         0
+..        ...      ...       ...      ...  ...   ...       ...  ...       ...
+269         2      146         0        0  ...  27.5     0.240   28         1
+337         5      115        76        0  ...  31.2     0.343   44         1
+91          4      123        80       15  ...  32.0     0.443   34         0
+80          3      113        44       13  ...  22.4     0.140   22         0
+703         2      129         0        0  ...  38.5     0.304   41         0
+
+[512 rows x 9 columns]
+     pregnant  glucose  pressure  triceps  ...  mass  pedigree  age  diabetes
+210         2       81        60       22  ...  27.7     0.290   25         0
+340         1      130        70       13  ...  25.9     0.472   22         0
+649         0      107        60       25  ...  26.4     0.133   23         0
+477         7      114        76       17  ...  23.8     0.466   31         0
+432         1       80        74       11  ...  30.0     0.527   22         0
+..        ...      ...       ...      ...  ...   ...       ...  ...       ...
+626         0      125        68        0  ...  24.7     0.206   21         0
+601         6       96         0        0  ...  23.7     0.190   28         0
+382         1      109        60        8  ...  25.4     0.947   21         0
+325         1      157        72       21  ...  25.6     0.123   24         0
+648        11      136        84       35  ...  28.3     0.260   42         1
+
+[256 rows x 9 columns]
+[0.65234375 0.34765625]
+[0.6484375 0.3515625]
+5-fold train error: 0.236328
+5-fold test error: 0.230469
+LOO train error: 0.236328
+LOO test error: 0.234375
+Tree with Penalty alpha: 0.010000
+Train error: 0.222656
+Test error: 0.277344
+Bagging
+Train error voting: 0.158203
+Test error voting: 0.226562
+Train error probability: 0.162109
+Test error probabibility: 0.226562
+Random forest
+Train error: 0.166016
+Test error: 0.214844
+Boosting
+Train error: 0.210938
+Test error: 0.199219
+did not converge
+did not converge
+did not converge
+did not converge
+LogisticGAM                                                                                               
+=============================================== ==========================================================
+Distribution:                      BinomialDist Effective DoF:                                     19.2587
+Link Function:                        LogitLink Log Likelihood:                                  -225.4455
+Number of Samples:                          512 AIC:                                              489.4084
+                                                AICc:                                             491.1636
+                                                UBRE:                                                2.986
+                                                Scale:                                                 1.0
+                                                Pseudo R-Squared:                                   0.3184
+==========================================================================================================
+Feature Function                  Lambda               Rank         EDoF         P > x        Sig. Code   
+================================= ==================== ============ ============ ============ ============
+s(0)                              [224.71]             20           3.5          7.83e-01                 
+s(1)                              [9.7516]             20           4.2          3.94e-10     ***         
+s(2)                              [3635.4993]          20           1.7          8.29e-01                 
+s(3)                              [635.2694]           20           1.7          5.78e-01                 
+s(4)                              [112.6186]           20           2.2          4.12e-01                 
+s(5)                              [12.1336]            20           2.8          2.92e-04     ***         
+s(6)                              [44.2385]            20           1.7          2.05e-02     *           
+s(7)                              [88.3978]            20           1.6          1.20e-02     *           
+intercept                                              1            0.0          5.12e-02     .           
+==========================================================================================================
+Significance codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+WARNING: Fitting splines and a linear function to a feature introduces a model identifiability problem
+         which can cause p-values to appear significant when they are not.
+
+WARNING: p-values calculated in this manner behave correctly for un-penalized models or models with
+         known smoothing parameters, but when smoothing parameters have been estimated, the p-values
+         are typically lower than they should be, meaning that the tests reject the null too readily.
+FULL GAM
+Train:error: 0.218750
+Test error: 0.214844
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 7)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 7)
+(512, 7)
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 7)
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 7)
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 7)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 7)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 7)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 6)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 6)
+(512, 6)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 6)
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 6)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 6)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 6)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 5)
+(512, 5)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 5)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 5)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 5)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 5)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 4)
+(512, 4)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 4)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 4)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+(512, 4)
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+did not converge
+LogisticGAM                                                                                               
+=============================================== ==========================================================
+Distribution:                      BinomialDist Effective DoF:                                     14.4529
+Link Function:                        LogitLink Log Likelihood:                                  -228.3272
+Number of Samples:                          512 AIC:                                              485.5601
+                                                AICc:                                             486.5863
+                                                UBRE:                                               2.9709
+                                                Scale:                                                 1.0
+                                                Pseudo R-Squared:                                   0.3097
+==========================================================================================================
+Feature Function                  Lambda               Rank         EDoF         P > x        Sig. Code   
+================================= ==================== ============ ============ ============ ============
+s(0)                              [9.7516]             20           5.3          2.80e-10     ***         
+s(1)                              [3635.4993]          20           1.6          7.72e-01                 
+s(2)                              [12.1336]            20           3.3          4.11e-04     ***         
+s(3)                              [44.2385]            20           2.4          4.67e-02     *           
+s(4)                              [88.3978]            20           1.9          2.62e-04     ***         
+intercept                                              1            0.0          5.80e-02     .           
+==========================================================================================================
+Significance codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+WARNING: Fitting splines and a linear function to a feature introduces a model identifiability problem
+         which can cause p-values to appear significant when they are not.
+
+WARNING: p-values calculated in this manner behave correctly for un-penalized models or models with
+         known smoothing parameters, but when smoothing parameters have been estimated, the p-values
+         are typically lower than they should be, meaning that the tests reject the null too readily.
+Best GAM
+Train:
+0.21484375
+Test:
+0.21484375
