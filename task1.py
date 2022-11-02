@@ -102,7 +102,11 @@ def backward_selection(X,y,criterion="AIC"):
         current_model = sm.OLS(y, current_X)
         current_est = current_model.fit()
         removed.append(not_removed_yet[best_crit_index]) #Add the removed variable to the list of removed variables
+def MSE(A,B):
+    err=(np.array(A).flatten()-np.array(B).flatten())**2
+    return np.sum(err)/len(err) #divide by number of data
 
+#Read data
 colnames=["TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040","LC50"]
 df=pd.read_csv("qsar_aquatic_toxicity.csv",delimiter=";",names=colnames)
 df=sm.add_constant(df) #Add intercept
@@ -119,10 +123,8 @@ mse_test_list=np.zeros(n_runs)
 mse_test_dich_list=np.zeros(n_runs)
 mse_train_list=np.zeros(n_runs)
 mse_train_dich_list=np.zeros(n_runs)
-def MSE(A,B):
-    err=(np.array(A).flatten()-np.array(B).flatten())**2
-    return np.sum(err)/len(err) #divide by number of data
-for i in range(n_runs):
+
+for i in range(n_runs): #200 different train_test splits
     train, test = train_test_split(df, test_size=1/3,random_state=i+init_random) #Split into train and test data with random state $i$ for reproducibility
     train_dich, test_dich = train_test_split(df_dich, test_size=1/3,random_state=i+init_random) #Apply same split to dichotomized data for comparability
     train_X=train.loc[:, train.columns != 'LC50']
@@ -145,13 +147,13 @@ for i in range(n_runs):
     mse_test_dich_list[i]=MSE(y_test_predict_dich,test_Y_dich)
     mse_train_list[i]=MSE(y_train_predict,train_Y)
     mse_train_dich_list[i]=MSE(y_train_predict_dich,train_Y_dich)
-    if i==0:
+    if i==0: #Print data for first train_test split
         print(est1.summary())
         print("Train error: %f"%mse_train_list[i])
         print("Test error: %f"%mse_test_list[i])
         print("End of Non-dichotomized data")
         print("-------------------------------------")
-    if i==0:
+    if i==0: #Print data for second train_test split
         print(est2.summary())
         print("Train error: %f"%mse_train_dich_list[i])
         print("Test error: %f"%mse_test_dich_list[i])
@@ -189,6 +191,7 @@ print("Train error BW BIC: %f"%MSE(predict_train_y_reduced,train_Y))
 print("Test error BW BIC: %f"%MSE(predict_test_y_reduced,test_Y))
 
 from sklearn.preprocessing import StandardScaler
+#Scale data for Ridge Regression
 train_X=np.array(train_X)[:,1:]
 test_X=np.array(test_X)[:,1:]
 
@@ -206,10 +209,6 @@ test_X=scaler.transform(test_X)
 
 from sklearn.linear_model import Ridge, RidgeCV
 from sklearn.model_selection import KFold
-#regr = RidgeCV(fit_intercept=False)
-#regr.fit(train_X, train_Y)
-#y_pred = regr.predict(test_X)
-#print(MSE(y_pred,test_Y))
 
 alpha_vals=np.logspace(-1,np.log10(40),100)
 num_cv=10 #CV folds
@@ -289,24 +288,21 @@ test_Y=np.array(test.loc[:, test.columns == 'LC50'])
 #Smoothing splines
 
 from sklearn.preprocessing import StandardScaler
+import pygam
+from pygam import LinearGAM, s, f
+from pygam.datasets import wage
 scaler=StandardScaler()
 df=pd.read_csv("qsar_aquatic_toxicity.csv",delimiter=";",names=colnames)
 #df=sm.add_constant(df) #Add intercept
 train, test = train_test_split(df, test_size=1/3,random_state=init_random) #Split into train and test data with random state $i$ for reproducibility
+
+#Scale data for smoothing splines such that equal penalties are imposed
 scaler.fit(train[["TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040"]])
 mean_train_Y=np.mean(train[["LC50"]])
 train[["TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040"]]=scaler.transform(train[["TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040"]])
 test[["TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040"]]=scaler.transform(test[["TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040"]])
-train[["LC50"]]=train[["LC50"]]-mean_train_Y
-test[["LC50"]]=test[["LC50"]]-mean_train_Y
-
-train.to_csv("train_set.csv")
-test.to_csv("test_set.csv")
-
-import pygam
-from pygam import LinearGAM, s, f
-from pygam.datasets import wage
-
+train[["LC50"]]=train[["LC50"]]-mean_train_Y #Scale output variable also. Not necessary, but does not do harm
+test[["LC50"]]=test[["LC50"]]-mean_train_Y #Scale output variable also.
 train_X=np.array(train.loc[:, train.columns != 'LC50'])
 train_Y=np.array(train.loc[:, train.columns == 'LC50'])
 test_X=np.array(test.loc[:, test.columns != 'LC50'])
@@ -317,12 +313,11 @@ formula = s(0, n_splines)
 from collections import Counter
 for i in range(1, train_X.shape[1]):
     if i==2 or i==6 or i==7:
-        n_splines_i=len(Counter(train_X[:,i]).keys()) #Number of different values equal to number of knots
+        n_splines_i=len(Counter(train_X[:,i]).keys()) #Number of different values equal to number of knots. Cannot have more
     else:
         n_splines_i=n_splines
     formula = formula + s(i, n_splines_i)
 lams=np.array([1,1,1,1,1,1,1,1])
-lams_spec=lams=np.array([1,0.01,1,10,1,1,1,1])
 for lam in np.logspace(1,5,2):
     print("Lam:%f"%lam)
     gam = LinearGAM(formula,lam=lam*lams).fit(train_X,train_Y)
@@ -334,15 +329,6 @@ for lam in np.logspace(1,5,2):
     print("Test:")
     print(MSE(test_Y_predict,test_Y))
 
-## plotting
-#print("Lam: Specific"%lam)
-#gam = LinearGAM(formula,lam=lams_spec).fit(train_X,train_Y)
-#train_Y_predict=gam.predict(train_X)
-#test_Y_predict=gam.predict(test_X)
-#print("Train:")
-#print(MSE(train_Y_predict,train_Y))
-#print("Test:")
-#print(MSE(test_Y_predict,test_Y))
 np.random.seed(seed=0) #reproducibility
 lams=np.exp(10*(np.random.rand(500, 8)) )
 gam = LinearGAM(formula).gridsearch(train_X,train_Y,lam=lams) #Find best parameters. Rather random search...
@@ -390,100 +376,3 @@ print("Tree test error (CV): %f"%MSE(y_pred_test,test_Y))
 plot_tree(tree,feature_names=["intercept","TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040","LC50"])
 plt.savefig("tree.pdf")
 plt.show()
-
-#Ignore from here on.
-"""
-train_X=train.loc[:, train.columns != 'LC50']
-train_Y=train.loc[:, train.columns == 'LC50']
-test_X=test.loc[:, test.columns != 'LC50']
-test_Y=test.loc[:, test.columns == 'LC50']
-from rpy2 import robjects
-import rpy2.robjects as ro
-import rpy2.robjects.numpy2ri
-from rpy2.robjects import pandas2ri
-from rpy2.robjects.conversion import localconverter
-from rpy2.robjects import FloatVector
-from rpy2.robjects.packages import importr
-
-import rpy2.robjects.numpy2ri as n2r
-rpy2.robjects.numpy2ri.activate()
-rpy2.robjects.pandas2ri.activate()
-
-n2r.activate()
-r = ro.r
-stats = importr('stats')
-base = importr('base')
-glmnet = importr('glmnet')
-gam = importr('gam')
-
-grdevices = importr('grDevices')
-r.library("glmnet")
-r.library("gam")
-with localconverter(ro.default_converter + pandas2ri.converter):
-  r_train = ro.conversion.py2rpy(train)
-  r_test = ro.conversion.py2rpy(train)
-
-model_gam = gam("LC50 ~TPSA",data=base.as_symbol(r_train)) #Ridge
-#nr,nc = train_X.shape
-#train_Xr = ro.r.matrix(train_X, nrow=nr, ncol=nc)
-#nr,nc = test_X.shape
-
-#test_Xr = ro.r.matrix(test_X, nrow=nr, ncol=nc)
-
-#train_Yr=FloatVector(list(train_Y))
-#lambda_vals=np.logspace(-3,3,100)
-#ro.r.assign("train_X", train_Xr)
-#ro.r.assign("test_X", test_Xr)
-
-
-#model_lambda = r['cv.glmnet'](train_Xr, train_Yr,alpha=1) #Ridge
-#lambda_min=model_lambda.rx2("lambda.min")
-#print(lambda_min)
-#y_predict=robjects.r.predict(model_lambda,test_Xr)
-#print(MSE(y_predict,test_Y))
-#grdevices.png(file="file.png", width=512, height=512)
-#base.plot(model_lambda)
-#grdevices.dev_off()
-
-
-df=pd.read_csv("qsar_aquatic_toxicity.csv",delimiter=";",names=colnames)
-df=sm.add_constant(df) #Add intercept
-train, test = train_test_split(df, test_size=1/10,random_state=init_random) #Split into train and test data with random state $i$ for reproducibility
-train_X=train.loc[:, train.columns != 'LC50']
-train_Y=train.loc[:, train.columns == 'LC50']
-test_X=test.loc[:, test.columns != 'LC50']
-test_Y=test.loc[:, test.columns == 'LC50']
-
-
-#GAM according to https://www.statsmodels.org/dev/gam.html
-import statsmodels.api as sm
-from statsmodels.gam.api import GLMGam, BSplines
-x_spline = train[["TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040"]]
-degree=list(np.ones(8,dtype=int)*3)
-dfv=list(np.ones(8,dtype=int)*30)
-#dfv=list(np.ones(8,dtype=int)*30)
-
-print(dfv)
-print(degree)
-bs = BSplines(x_spline, df=dfv, degree=degree)
-alpha = np.ones(8)*1e4 #Some random number, really
-gam_bs = GLMGam.from_formula('LC50 ~ TPSA + SAacc + H050 + MLOGP + RDCHI + GATS1p + nN + C040', data=train,smoother=bs, alpha=alpha)
-res_bs = gam_bs.fit()
-print(res_bs.summary())
-y_pred=res_bs.predict(exog=test[["TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040"]],exog_smooth = np.asarray(test[["TPSA","SAacc","H050","MLOGP","RDCHI","GATS1p","nN","C040"]]))
-print("GLM error")
-print(MSE(y_pred,test_Y))
-
-train_X=np.array(train_X)[:,1:]
-test_X=np.array(test_X)[:,1:]
-
-train_Y=np.array(train_Y)
-test_Y=np.array(test_Y)
-train_Y_mean=np.mean(train_Y)
-train_Y=train_Y-train_Y_mean
-test_Y=test_Y-train_Y_mean
-scaler=StandardScaler()
-scaler.fit(train_X) #"teach" scaler the correct scaling
-train_X=scaler.transform(train_X)
-test_X=scaler.transform(test_X)
-"""

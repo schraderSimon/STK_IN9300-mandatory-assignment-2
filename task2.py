@@ -11,8 +11,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, zero_one_loss
 df=pd.read_csv("PimaIndiansDiabetes.csv")
-#df=pd.read_csv("PimaIndiansDiabetes2.csv")
-#df=df.dropna() # Remove NaN elements
+
 
 df = df.loc[:, ~df.columns.str.contains('^Unnamed')] #Remove indexing column which has no information content
 mapping = {'pos': 1, 'neg': 0}
@@ -129,16 +128,16 @@ print("LOO train error: %f"%LOO_train_error)
 print("LOO test error: %f"%LOO_test_error)
 """Tree-based methods"""
 from sklearn import tree
-for k,i in enumerate([0.01]):
-    baum = tree.DecisionTreeClassifier(ccp_alpha=i)
-    baum.fit(train_X, np.array(train_Y).ravel())
-    train_predict=baum.predict(train_X)
-    test_predict=baum.predict(test_X)
-    print("Tree with Penalty alpha: %f"%i)
-    print("Train error: %f"%(1-accuracy_score(train_predict,train_Y)))
-    print("Test error: %f"%(1-accuracy_score(test_predict,test_Y)))
-    #tree.plot_tree(baum)
-    #plt.show()
+
+#Decision tree
+baum = tree.DecisionTreeClassifier(ccp_alpha=0.01)
+baum.fit(train_X, np.array(train_Y).ravel())
+train_predict=baum.predict(train_X)
+test_predict=baum.predict(test_X)
+print("Tree with Penalty alpha: %f"%i)
+print("Train error: %f"%(1-accuracy_score(train_predict,train_Y)))
+print("Test error: %f"%(1-accuracy_score(test_predict,test_Y)))
+
 #Bagging
 from sklearn.ensemble import BaggingClassifier, AdaBoostClassifier, RandomForestClassifier
 
